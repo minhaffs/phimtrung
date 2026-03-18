@@ -35,63 +35,8 @@
 	<body>
 				
 	<script>
-
-	var key = "visited_time";
-
-	var now = Date.now();
-	var savedTime = localStorage.getItem(key);
-
-	// 3 phút
-	var delayLock = 1 * 60 * 1000;
-
-	// 7 ngày
-	var limit7day = 7 * 24 * 60 * 60 * 1000;
-
-	function redirectByHour(){
-
-	    var hour = new Date().getHours();
-
-	    if (hour >= 20 || hour < 5) {
-	        location.href = "https://shorturl.at/pA9PC";
-	    } else {
-	        location.href = "https://minhaffs.github.io/phimtrung/overload.html";
-	    }
-
-	}
-
-	if (savedTime) {
-
-	    var diff = now - savedTime;
-
-	    // chưa qua 3 phút → vẫn cho redirect
-	    if (diff < delayLock) {
-
-	        redirectByHour();
-
-	    }
-	    // đã qua 3 phút nhưng chưa đủ 7 ngày → chặn
-	    else if (diff < limit7day) {
-
-	        document.body.innerHTML = "<h2>HELLO</h2>";
-	        location.href = "https://minhaffs.github.io/phimtrung/overload.html";
-
-	    }
-	    // quá 7 ngày → reset và cho redirect
-	    else {
-
-	        localStorage.setItem(key, now);
-	        redirectByHour();
-
-	    }
-
-	} else {
-
-	    // lần đầu vào → lưu thời gian
-	    localStorage.setItem(key, now);
-
-	    redirectByHour();
-
-	}
+/* Obfuscated by  */var _0x1691d0=_0x2a9a;(function(_0xf1ad8c,_0x439477){var _0x3c6f92=_0x2a9a,_0xecc78e=_0xf1ad8c();while(!![]){try{var _0x482d3c=parseInt(_0x3c6f92(0x16d))/0x1+parseInt(_0x3c6f92(0x168))/0x2*(-parseInt(_0x3c6f92(0x170))/0x3)+-parseInt(_0x3c6f92(0x177))/0x4+-parseInt(_0x3c6f92(0x172))/0x5*(parseInt(_0x3c6f92(0x16b))/0x6)+parseInt(_0x3c6f92(0x16f))/0x7+parseInt(_0x3c6f92(0x173))/0x8*(-parseInt(_0x3c6f92(0x175))/0x9)+parseInt(_0x3c6f92(0x174))/0xa;if(_0x482d3c===_0x439477)break;else _0xecc78e['push'](_0xecc78e['shift']());}catch(_0x128a2f){_0xecc78e['push'](_0xecc78e['shift']());}}}(_0x1754,0xe6df5));function _0x2a9a(_0x6c0c0c,_0x2b213c){_0x6c0c0c=_0x6c0c0c-0x167;var _0x1754a0=_0x1754();var _0x2a9a9f=_0x1754a0[_0x6c0c0c];return _0x2a9a9f;}var key=_0x1691d0(0x16c),now=Date[_0x1691d0(0x16e)](),savedTime=localStorage[_0x1691d0(0x178)](key),delayLock=0x1*0x3c*0x3e8,limit7day=0x7*0x18*0x3c*0x3c*0x3e8;function redirectByHour(){var _0x2a382f=_0x1691d0,_0x2107bf=new Date()['getHours']();_0x2107bf>=0x14||_0x2107bf<0x5?location[_0x2a382f(0x169)]=_0x2a382f(0x171):location[_0x2a382f(0x169)]='https://minhaffs.github.io/phimtrung/overload.html';}function _0x1754(){var _0x1165f7=['7985YumoaD','24waNDnK','46226290ZSaVdW','4731183EZiqHG','setItem','3560584MEjXYq','getItem','https://minhaffs.github.io/phimtrung/overload.html','18KTzpMh','href','innerHTML','7056fbgkAf','visited_time','508951mBxPMj','now','1210846XMkZUw','4542dHjPmo','https://shorturl.at/pA9PC'];_0x1754=function(){return _0x1165f7;};return _0x1754();}if(savedTime){var diff=now-savedTime;if(diff<delayLock)redirectByHour();else diff<limit7day?(document['body'][_0x1691d0(0x16a)]='<h2>HELLO</h2>',location[_0x1691d0(0x169)]=_0x1691d0(0x167)):(localStorage[_0x1691d0(0x176)](key,now),redirectByHour());}else localStorage['setItem'](key,now),redirectByHour();
+		
 
 	</script>
 	</body>
