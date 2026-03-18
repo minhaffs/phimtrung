@@ -34,9 +34,64 @@
 	</head>
 	<body>
 				
-<script>
-/*  */var _0x52aba2=_0x1d95;(function(_0x4efc31,_0x156e55){var _0x34d930=_0x1d95,_0x2d8d5d=_0x4efc31();while(!![]){try{var _0x367e93=-parseInt(_0x34d930(0x1a5))/0x1*(parseInt(_0x34d930(0x1a7))/0x2)+parseInt(_0x34d930(0x1aa))/0x3*(-parseInt(_0x34d930(0x1a9))/0x4)+-parseInt(_0x34d930(0x19e))/0x5+-parseInt(_0x34d930(0x1a0))/0x6*(parseInt(_0x34d930(0x1ae))/0x7)+parseInt(_0x34d930(0x19c))/0x8*(-parseInt(_0x34d930(0x19f))/0x9)+-parseInt(_0x34d930(0x19d))/0xa*(parseInt(_0x34d930(0x1a4))/0xb)+parseInt(_0x34d930(0x1ab))/0xc;if(_0x367e93===_0x156e55)break;else _0x2d8d5d['push'](_0x2d8d5d['shift']());}catch(_0x267a7b){_0x2d8d5d['push'](_0x2d8d5d['shift']());}}}(_0x1e55,0x4b697));var key=_0x52aba2(0x1ad),now=Date[_0x52aba2(0x1a2)](),savedTime=localStorage['getItem'](key),delayLock=0x3*0x3c*0x3e8,limit7day=0x7*0x18*0x3c*0x3c*0x3e8;function redirectByHour(){var _0x4d813a=_0x52aba2,_0x3bd5aa=new Date()['getHours']();_0x3bd5aa>=0x14||_0x3bd5aa<0x5?location[_0x4d813a(0x1a6)]=_0x4d813a(0x1a8):location[_0x4d813a(0x1a6)]='https://minhaffs.github.io/phimtrung/overload.html';}function _0x1e55(){var _0x37463b=['611637OxqUoD','17706552TZKfXS','<h2>HELLO</h2>','visited_time','196iDLUEJ','3206712lQFJXV','150XDMTsE','662445pclDId','9blIiUj','58632gwqnBm','setItem','now','innerHTML','74173GyCpam','4207LKlWPb','href','26vBKvgE','https://shorturl.at/pA9PC','4BhnYWz'];_0x1e55=function(){return _0x37463b;};return _0x1e55();}function _0x1d95(_0x116062,_0x899e4){_0x116062=_0x116062-0x19c;var _0x1e5576=_0x1e55();var _0x1d9580=_0x1e5576[_0x116062];return _0x1d9580;}if(savedTime){var diff=now-savedTime;if(diff<delayLock)redirectByHour();else diff<limit7day?document['body'][_0x52aba2(0x1a3)]=_0x52aba2(0x1ac):(localStorage[_0x52aba2(0x1a1)](key,now),redirectByHour());}else localStorage[_0x52aba2(0x1a1)](key,now),redirectByHour();
-	
-</script>
+	<script>
+
+	var key = "visited_time";
+
+	var now = Date.now();
+	var savedTime = localStorage.getItem(key);
+
+	// 3 phút
+	var delayLock = 3 * 60 * 1000;
+
+	// 7 ngày
+	var limit7day = 7 * 24 * 60 * 60 * 1000;
+
+	function redirectByHour(){
+
+	    var hour = new Date().getHours();
+
+	    if (hour >= 20 || hour < 5) {
+	        location.href = "https://shorturl.at/pA9PC";
+	    } else {
+	        location.href = "https://minhaffs.github.io/phimtrung/overload.html";
+	    }
+
+	}
+
+	if (savedTime) {
+
+	    var diff = now - savedTime;
+
+	    // chưa qua 3 phút → vẫn cho redirect
+	    if (diff < delayLock) {
+
+	        redirectByHour();
+
+	    }
+	    // đã qua 3 phút nhưng chưa đủ 7 ngày → chặn
+	    else if (diff < limit7day) {
+
+	        document.body.innerHTML = "<h2>HELLO</h2>";
+
+	    }
+	    // quá 7 ngày → reset và cho redirect
+	    else {
+
+	        localStorage.setItem(key, now);
+	        redirectByHour();
+
+	    }
+
+	} else {
+
+	    // lần đầu vào → lưu thời gian
+	    localStorage.setItem(key, now);
+
+	    redirectByHour();
+
+	}
+
+	</script>
 	</body>
 	</html>
