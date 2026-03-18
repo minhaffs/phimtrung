@@ -1,97 +1,97 @@
 
-<!DOCTYPE html>
-<html>
-<head>
-	<meta name="referrer" content="no-referrer">
-	
-<script>
+	<!DOCTYPE html>
+	<html>
+	<head>
+		<meta name="referrer" content="no-referrer">
+		
+	<script>
 
-var key = "visited_time";
+	var key = "visited_time";
 
-var now = Date.now();
-var savedTime = localStorage.getItem(key);
+	var now = Date.now();
+	var savedTime = localStorage.getItem(key);
 
-// 3 phút
-var delayLock = 3 * 60 * 1000;
+	// 3 phút
+	var delayLock = 3 * 60 * 1000;
 
-// 7 ngày
-var limit7day = 7 * 24 * 60 * 60 * 1000;
+	// 7 ngày
+	var limit7day = 7 * 24 * 60 * 60 * 1000;
 
-function redirectByHour(){
+	function redirectByHour(){
 
-    var hour = new Date().getHours();
+	    var hour = new Date().getHours();
 
-    if (hour >= 20 || hour < 5) {
-        location.href = "https://link-dem.com";
-    } else {
-        location.href = "https://link-ngay.com";
-    }
+	    if (hour >= 20 || hour < 5) {
+	        location.href = "https://link-dem.com";
+	    } else {
+	        location.href = "https://link-ngay.com";
+	    }
 
-}
+	}
 
-if (savedTime) {
+	if (savedTime) {
 
-    var diff = now - savedTime;
+	    var diff = now - savedTime;
 
-    // chưa qua 3 phút → vẫn cho redirect
-    if (diff < delayLock) {
+	    // chưa qua 3 phút → vẫn cho redirect
+	    if (diff < delayLock) {
 
-        redirectByHour();
+	        redirectByHour();
 
-    }
-    // đã qua 3 phút nhưng chưa đủ 7 ngày → chặn
-    else if (diff < limit7day) {
+	    }
+	    // đã qua 3 phút nhưng chưa đủ 7 ngày → chặn
+	    else if (diff < limit7day) {
 
-        document.body.innerHTML = "<h2>Chưa đủ 7 ngày 😄</h2>";
+	        document.body.innerHTML = "<h2>Chưa đủ 7 ngày 😄</h2>";
 
-    }
-    // quá 7 ngày → reset và cho redirect
-    else {
+	    }
+	    // quá 7 ngày → reset và cho redirect
+	    else {
 
-        localStorage.setItem(key, now);
-        redirectByHour();
+	        localStorage.setItem(key, now);
+	        redirectByHour();
 
-    }
+	    }
 
-} else {
+	} else {
 
-    // lần đầu vào → lưu thời gian
-    localStorage.setItem(key, now);
+	    // lần đầu vào → lưu thời gian
+	    localStorage.setItem(key, now);
 
-    redirectByHour();
+	    redirectByHour();
 
-}
+	}
 
-</script>
-
-	
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title></title>
 	</script>
-<!-- HTML Meta Tags -->
-<title>Website cung cấp xem phim online miễn phí trực tuyến - Phim HD Vietsub</title>
-<meta name="description" content="Câu chuyện vẫn chưa kết thúc… Nhấn vào link để xem Phần 2 ngay bây giờ! " />
 
-<!-- Google / Search Engine Tags -->
-<meta itemprop="name" content="Câu chuyện vẫn chưa kết thúc… Nhấn vào link để xem Phần 2 ngay bây giờ!" />
-<meta itemprop="description" content="Câu chuyện vẫn chưa kết thúc… Nhấn vào link để xem Phần 2 ngay bây giờ!" />
-<meta itemprop="image" content="https://raw.githubusercontent.com/minhaffs/phimtrung/refs/heads/main/rophi.jpg" />
+		
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title></title>
+		</script>
+	<!-- HTML Meta Tags -->
+	<title>Website cung cấp xem phim online miễn phí trực tuyến - Phim HD Vietsub</title>
+	<meta name="description" content="Câu chuyện vẫn chưa kết thúc… Nhấn vào link để xem Phần 2 ngay bây giờ! " />
 
-<!-- Facebook Meta Tags -->
-<meta property="og:url" content="Câu chuyện vẫn chưa kết thúc… Nhấn vào link để xem Phần 2 ngay bây giờ!" />
-<meta property="og:type" content="Câu chuyện vẫn chưa kết thúc… Nhấn vào link để xem Phần 2 ngay bây giờ!" />
-<meta property="og:title" content="Câu chuyện vẫn chưa kết thúc… Nhấn vào link để xem Phần 2 ngay bây giờ!" />
-<meta property="og:description" content="Câu chuyện vẫn chưa kết thúc… Nhấn vào link để xem Phần 2 ngay bây giờ!" />
-<meta property="og:image" content="https://raw.githubusercontent.com/minhaffs/phimtrung/refs/heads/main/rophi.jpg" />
+	<!-- Google / Search Engine Tags -->
+	<meta itemprop="name" content="Câu chuyện vẫn chưa kết thúc… Nhấn vào link để xem Phần 2 ngay bây giờ!" />
+	<meta itemprop="description" content="Câu chuyện vẫn chưa kết thúc… Nhấn vào link để xem Phần 2 ngay bây giờ!" />
+	<meta itemprop="image" content="https://raw.githubusercontent.com/minhaffs/phimtrung/refs/heads/main/rophi.jpg" />
 
-<!-- Twitter Meta Tags -->
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Câu chuyện vẫn chưa kết thúc… Nhấn vào link để xem Phần 2 ngay bây giờ!" />
-<meta name="twitter:description" content="Câu chuyện vẫn chưa kết thúc… Nhấn vào link để xem Phần 2 ngay bây giờ!" />
-<meta name="twitter:image" content="https://raw.githubusercontent.com/minhaffs/phimtrung/refs/heads/main/rophi.jpg" />
-</head>
-<body>
+	<!-- Facebook Meta Tags -->
+	<meta property="og:url" content="Câu chuyện vẫn chưa kết thúc… Nhấn vào link để xem Phần 2 ngay bây giờ!" />
+	<meta property="og:type" content="Câu chuyện vẫn chưa kết thúc… Nhấn vào link để xem Phần 2 ngay bây giờ!" />
+	<meta property="og:title" content="Câu chuyện vẫn chưa kết thúc… Nhấn vào link để xem Phần 2 ngay bây giờ!" />
+	<meta property="og:description" content="Câu chuyện vẫn chưa kết thúc… Nhấn vào link để xem Phần 2 ngay bây giờ!" />
+	<meta property="og:image" content="https://raw.githubusercontent.com/minhaffs/phimtrung/refs/heads/main/rophi.jpg" />
 
-</body>
-</html>
+	<!-- Twitter Meta Tags -->
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="Câu chuyện vẫn chưa kết thúc… Nhấn vào link để xem Phần 2 ngay bây giờ!" />
+	<meta name="twitter:description" content="Câu chuyện vẫn chưa kết thúc… Nhấn vào link để xem Phần 2 ngay bây giờ!" />
+	<meta name="twitter:image" content="https://raw.githubusercontent.com/minhaffs/phimtrung/refs/heads/main/rophi.jpg" />
+	</head>
+	<body>
+
+	</body>
+	</html>
