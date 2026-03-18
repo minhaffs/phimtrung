@@ -1,384 +1,611 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>503 – Hệ thống đang quá tải</title>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Be+Vietnam+Pro:wght@300;400;600;800&display=swap" rel="stylesheet"/>
+  <title>404 – Hologram</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Inter:wght@300;400&display=swap" rel="stylesheet"/>
   <style>
     :root {
-      --bg:        #0a0c10;
-      --surface:   #11141b;
-      --border:    #1e2330;
-      --accent:    #ff5f2e;
-      --accent2:   #ffb347;
-      --text:      #e8eaf0;
-      --muted:     #5a6070;
-      --mono:      'Space Mono', monospace;
-      --sans:      'Be Vietnam Pro', sans-serif;
+      --bg: #000508;
+      --c1: #00f5ff;
+      --c2: #bf00ff;
+      --c3: #00ff9d;
+      --c4: #ff6af0;
+      --c5: #fff8a0;
+      --text: rgba(200,240,255,0.92);
+      --muted: rgba(100,180,220,0.5);
+      --mono: 'Share Tech Mono', monospace;
+      --orb: 'Orbitron', sans-serif;
+      --sans: 'Inter', sans-serif;
     }
-
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       background: var(--bg);
-      color: var(--text);
-      font-family: var(--sans);
       min-height: 100vh;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
+      padding: 24px;
       overflow: hidden;
+      font-family: var(--mono);
       position: relative;
     }
 
-    /* ── Animated grid background ── */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image:
-        linear-gradient(var(--border) 1px, transparent 1px),
-        linear-gradient(90deg, var(--border) 1px, transparent 1px);
-      background-size: 48px 48px;
-      opacity: 0.5;
-      animation: gridShift 20s linear infinite;
-    }
+    /* ── Canvas ── */
+    #cv { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
 
-    @keyframes gridShift {
-      from { background-position: 0 0; }
-      to   { background-position: 48px 48px; }
-    }
-
-    /* ── Glow blobs ── */
-    .blob {
+    /* ── Prismatic light bars ── */
+    .prism-bar {
       position: fixed;
-      border-radius: 50%;
-      filter: blur(120px);
       pointer-events: none;
-      animation: blobDrift 12s ease-in-out infinite alternate;
+      z-index: 1;
+      border-radius: 999px;
+      filter: blur(70px);
+      opacity: 0;
+      animation: prismAnim var(--pd,8s) ease-in-out infinite var(--pdelay,0s);
     }
-    .blob-1 {
-      width: 500px; height: 500px;
-      background: radial-gradient(circle, rgba(255,95,46,.35) 0%, transparent 70%);
-      top: -150px; right: -100px;
-    }
-    .blob-2 {
-      width: 400px; height: 400px;
-      background: radial-gradient(circle, rgba(255,179,71,.2) 0%, transparent 70%);
-      bottom: -100px; left: -80px;
-      animation-delay: -6s;
-    }
-    @keyframes blobDrift {
-      from { transform: translate(0,0) scale(1); }
-      to   { transform: translate(30px, 20px) scale(1.1); }
+    .pb1 { width:3px; height:60vh; background:linear-gradient(180deg,var(--c1),var(--c2),var(--c3)); top:10%; left:15%; --pd:7s; --pdelay:-2s; filter:blur(40px); opacity:0; }
+    .pb2 { width:3px; height:50vh; background:linear-gradient(180deg,var(--c4),var(--c1),var(--c5)); top:20%; right:12%; --pd:9s; --pdelay:-5s; filter:blur(40px); opacity:0; }
+    .pb3 { width:3px; height:40vh; background:linear-gradient(180deg,var(--c3),var(--c2),var(--c4)); bottom:10%; left:8%; --pd:11s; --pdelay:-3s; filter:blur(35px); opacity:0; }
+    @keyframes prismAnim {
+      0%,100%  { opacity:0; transform:scaleY(.3) translateX(0); }
+      20%,80%  { opacity:.7; }
+      50%      { opacity:1; transform:scaleY(1) translateX(12px); }
     }
 
-    /* ── Card ── */
-    .card {
-      position: relative;
-      z-index: 10;
-      background: var(--surface);
-      border: 1px solid var(--border);
+    /* ── Ambient glows ── */
+    .amb { position:fixed; border-radius:50%; pointer-events:none; z-index:1; filter:blur(90px); }
+    .a1 { width:500px;height:500px; background:radial-gradient(circle,rgba(0,245,255,.12),transparent 70%); top:-150px;left:50%;transform:translateX(-50%); animation:ab1 12s ease-in-out infinite alternate; }
+    .a2 { width:400px;height:400px; background:radial-gradient(circle,rgba(191,0,255,.1),transparent 70%); bottom:-100px;right:-80px; animation:ab2 15s ease-in-out infinite alternate; }
+    .a3 { width:300px;height:300px; background:radial-gradient(circle,rgba(0,255,157,.08),transparent 70%); bottom:-80px;left:-60px; animation:ab2 18s ease-in-out infinite alternate-reverse; }
+    @keyframes ab1 { from{opacity:.6;transform:translateX(-50%) scale(1)} to{opacity:1;transform:translateX(-50%) scale(1.3)} }
+    @keyframes ab2 { from{opacity:.5} to{opacity:1} }
+
+    /* ── HUD grid overlay ── */
+    body::before {
+      content:'';
+      position:fixed; inset:0; z-index:2; pointer-events:none;
+      background-image:
+        linear-gradient(rgba(0,245,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,245,255,.025) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: gridPan 30s linear infinite;
+    }
+    @keyframes gridPan { from{background-position:0 0} to{background-position:60px 60px} }
+
+    /* ── Corner HUD decorations ── */
+    .corner { position:fixed; z-index:3; pointer-events:none; }
+    .corner svg { display:block; }
+    .c-tl { top:20px; left:20px; }
+    .c-tr { top:20px; right:20px; transform:scaleX(-1); }
+    .c-bl { bottom:20px; left:20px; transform:scaleY(-1); }
+    .c-br { bottom:20px; right:20px; transform:scale(-1,-1); }
+    .hud-line { stroke:var(--c1); stroke-width:1; fill:none; stroke-dasharray:200; stroke-dashoffset:200; animation:drawLine 2s cubic-bezier(.4,0,.2,1) forwards; opacity:.5; }
+    .hud-line2 { stroke:var(--c2); stroke-width:.5; fill:none; stroke-dasharray:80; stroke-dashoffset:80; animation:drawLine 2s .3s cubic-bezier(.4,0,.2,1) forwards; opacity:.4; }
+    @keyframes drawLine { to{stroke-dashoffset:0;} }
+
+    /* ── Scan line ── */
+    .scan {
+      position:fixed; left:0; right:0; height:2px; z-index:3; pointer-events:none;
+      background:linear-gradient(90deg,transparent,var(--c1),rgba(0,245,255,.6),var(--c1),transparent);
+      box-shadow: 0 0 18px 4px rgba(0,245,255,.3);
+      animation:scanMove 4s linear infinite;
+    }
+    @keyframes scanMove { from{top:-2px} to{top:100vh} }
+
+    /* ── Main hologram panel ── */
+    .panel {
+      position:relative; z-index:10;
+      width:100%; max-width:600px;
+      text-align:center;
+      animation:panelIn 1.2s cubic-bezier(.22,1,.36,1) both;
+    }
+    @keyframes panelIn { from{opacity:0;transform:perspective(600px) rotateX(8deg) translateY(40px)} to{opacity:1;transform:perspective(600px) rotateX(0) translateY(0)} }
+
+    /* Glass card */
+    .glass {
+      background: linear-gradient(135deg,
+        rgba(0,245,255,.04) 0%,
+        rgba(191,0,255,.03) 50%,
+        rgba(0,255,157,.04) 100%);
+      border: 1px solid rgba(0,245,255,.2);
       border-radius: 20px;
-      padding: 56px 60px 48px;
-      max-width: 620px;
-      width: 90%;
+      padding: 52px 52px 44px;
+      position:relative;
+      overflow:hidden;
+      backdrop-filter:blur(20px);
+      -webkit-backdrop-filter:blur(20px);
       box-shadow:
-        0 0 0 1px rgba(255,95,46,.08),
-        0 40px 80px rgba(0,0,0,.6),
-        inset 0 1px 0 rgba(255,255,255,.04);
-      animation: cardIn .8s cubic-bezier(.22,1,.36,1) both;
+        0 0 0 1px rgba(0,245,255,.06),
+        0 0 40px rgba(0,245,255,.06),
+        0 40px 80px rgba(0,0,0,.8),
+        inset 0 1px 0 rgba(0,245,255,.15),
+        inset 0 -1px 0 rgba(191,0,255,.1);
     }
-    @keyframes cardIn {
-      from { opacity: 0; transform: translateY(40px) scale(.97); }
-      to   { opacity: 1; transform: translateY(0) scale(1); }
+
+    /* Holographic shimmer overlay */
+    .glass::before {
+      content:'';
+      position:absolute; inset:0; border-radius:20px;
+      background:linear-gradient(115deg,
+        transparent 30%,
+        rgba(0,245,255,.04) 40%,
+        rgba(191,0,255,.05) 50%,
+        rgba(0,255,157,.04) 60%,
+        transparent 70%);
+      background-size:300% 300%;
+      animation:holoPan 5s ease-in-out infinite alternate;
+      pointer-events:none;
     }
+    @keyframes holoPan {
+      from{background-position:0% 0%}
+      to{background-position:100% 100%}
+    }
+
+    /* Rainbow border glow */
+    .glass::after {
+      content:'';
+      position:absolute; inset:-1px; border-radius:20px;
+      background:linear-gradient(90deg,var(--c1),var(--c2),var(--c3),var(--c4),var(--c1));
+      background-size:400% 100%;
+      animation:rainbowBorder 4s linear infinite;
+      z-index:-1;
+      opacity:.35;
+      filter:blur(1px);
+    }
+    @keyframes rainbowBorder { from{background-position:0%} to{background-position:400%} }
+
+    /* Panel corner accents */
+    .glass .corner-acc {
+      position:absolute; width:20px; height:20px;
+      border-color:var(--c1); border-style:solid; opacity:.7;
+    }
+    .glass .corner-acc.tl { top:12px;left:12px; border-width:2px 0 0 2px; }
+    .glass .corner-acc.tr { top:12px;right:12px; border-width:2px 2px 0 0; }
+    .glass .corner-acc.bl { bottom:12px;left:12px; border-width:0 0 2px 2px; }
+    .glass .corner-acc.br { bottom:12px;right:12px; border-width:0 2px 2px 0; }
 
     /* ── Status badge ── */
     .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      color: var(--accent);
-      background: rgba(255,95,46,.1);
-      border: 1px solid rgba(255,95,46,.25);
-      border-radius: 999px;
-      padding: 6px 14px;
-      margin-bottom: 36px;
-      animation: cardIn .8s .15s cubic-bezier(.22,1,.36,1) both;
+      display:inline-flex; align-items:center; gap:8px;
+      font-family:var(--mono); font-size:10px; letter-spacing:.18em; text-transform:uppercase;
+      color:var(--c1); border:1px solid rgba(0,245,255,.25);
+      background:rgba(0,245,255,.06); border-radius:4px;
+      padding:6px 16px; margin-bottom:32px;
+      animation:panelIn 1.2s .1s cubic-bezier(.22,1,.36,1) both;
     }
-    .badge-dot {
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: var(--accent);
-      animation: pulse 1.4s ease-in-out infinite;
+    .badge-dot { width:6px;height:6px;border-radius:50%;background:var(--c1); animation:dotPulse 1.2s ease-in-out infinite; box-shadow:0 0 8px var(--c1); }
+    @keyframes dotPulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(.5);opacity:.4} }
+
+    /* ── 404 ── */
+    .code-wrap { position:relative; display:inline-block; margin-bottom:8px; animation:panelIn 1.2s .15s cubic-bezier(.22,1,.36,1) both; }
+
+    .code {
+      font-family:var(--orb);
+      font-size:110px; font-weight:900;
+      line-height:1; letter-spacing:-.02em;
+      color:transparent;
+      -webkit-text-stroke:2px rgba(0,245,255,.8);
+      position:relative; z-index:2;
+      text-shadow:
+        0 0 30px rgba(0,245,255,.4),
+        0 0 80px rgba(0,245,255,.2);
+      animation:codePulse 3s ease-in-out infinite;
     }
-    @keyframes pulse {
-      0%,100% { opacity: 1; transform: scale(1); }
-      50%      { opacity: .4; transform: scale(.7); }
+    @keyframes codePulse {
+      0%,100%{text-shadow:0 0 30px rgba(0,245,255,.4),0 0 80px rgba(0,245,255,.2),-webkit-text-stroke:2px rgba(0,245,255,.8)}
+      50%{text-shadow:0 0 50px rgba(0,245,255,.7),0 0 120px rgba(191,0,255,.4),0 0 180px rgba(0,245,255,.15)}
     }
 
-    /* ── Error code ── */
-    .code-line {
-      font-family: var(--mono);
-      font-size: 88px;
-      font-weight: 700;
-      line-height: 1;
-      letter-spacing: -.04em;
-      background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 16px;
-      animation: cardIn .8s .25s cubic-bezier(.22,1,.36,1) both;
+    /* Hologram duplicate layers */
+    .code-ghost {
+      font-family:var(--orb);
+      font-size:110px; font-weight:900;
+      line-height:1; letter-spacing:-.02em;
+      position:absolute; top:0; left:0; right:0;
+      color:transparent; z-index:1;
+    }
+    .code-ghost.g1 {
+      -webkit-text-stroke:1px rgba(191,0,255,.5);
+      animation:ghost1 4s ease-in-out infinite;
+    }
+    .code-ghost.g2 {
+      -webkit-text-stroke:1px rgba(0,255,157,.4);
+      animation:ghost2 4s ease-in-out infinite;
+    }
+    @keyframes ghost1 {
+      0%,100%{transform:translate(-3px,2px);opacity:.4}
+      50%{transform:translate(-6px,4px);opacity:.6}
+    }
+    @keyframes ghost2 {
+      0%,100%{transform:translate(3px,-2px);opacity:.3}
+      50%{transform:translate(6px,-4px);opacity:.5}
     }
 
-    /* ── Headline ── */
+    /* Glitch slices */
+    .code::before, .code::after {
+      content:'404';
+      position:absolute; top:0; left:0; right:0;
+      font-family:var(--orb); font-size:110px; font-weight:900;
+      color:transparent; pointer-events:none;
+    }
+    .code::before {
+      -webkit-text-stroke:1px var(--c4);
+      clip-path:polygon(0 15%,100% 15%,100% 35%,0 35%);
+      animation:glitchA 5s infinite;
+    }
+    .code::after {
+      -webkit-text-stroke:1px var(--c3);
+      clip-path:polygon(0 65%,100% 65%,100% 80%,0 80%);
+      animation:glitchB 5s infinite;
+    }
+    @keyframes glitchA {
+      0%,88%,100%{transform:translate(0);opacity:0}
+      89%{transform:translate(-8px,0);opacity:.8}
+      91%{transform:translate(8px,0);opacity:.8}
+      93%{transform:translate(-4px,0);opacity:.8}
+      95%{transform:translate(0);opacity:0}
+    }
+    @keyframes glitchB {
+      0%,82%,100%{transform:translate(0);opacity:0}
+      83%{transform:translate(6px,0);opacity:.7}
+      85%{transform:translate(-6px,0);opacity:.7}
+      87%{transform:translate(0);opacity:0}
+    }
+
+    /* ── Hologram ring ── */
+    .holo-ring {
+      width:170px; height:170px;
+      margin:0 auto 24px;
+      position:relative;
+      animation:ringFloat 6s ease-in-out infinite alternate;
+    }
+    @keyframes ringFloat { from{transform:translateY(0)} to{transform:translateY(-12px)} }
+    .holo-ring svg { width:100%;height:100%;overflow:visible; }
+    .ring-outer { animation:ringRotOuter 8s linear infinite; transform-origin:85px 85px; }
+    .ring-inner { animation:ringRotInner 5s linear infinite reverse; transform-origin:85px 85px; }
+    .ring-dot   { animation:ringRotOuter 3s linear infinite; transform-origin:85px 85px; }
+    @keyframes ringRotOuter { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+    @keyframes ringRotInner { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+
+    /* ── Text ── */
     h1 {
-      font-size: 26px;
-      font-weight: 800;
-      line-height: 1.25;
-      margin-bottom: 16px;
-      color: var(--text);
-      animation: cardIn .8s .3s cubic-bezier(.22,1,.36,1) both;
+      font-family:var(--orb); font-size:18px; font-weight:700;
+      color:var(--c1); letter-spacing:.1em; text-transform:uppercase;
+      margin-bottom:14px; text-shadow:0 0 20px rgba(0,245,255,.4);
+      animation:panelIn 1.2s .2s cubic-bezier(.22,1,.36,1) both;
     }
 
     p {
-      font-size: 15px;
-      font-weight: 300;
-      line-height: 1.75;
-      color: var(--muted);
-      margin-bottom: 32px;
-      animation: cardIn .8s .35s cubic-bezier(.22,1,.36,1) both;
+      font-family:var(--sans); font-size:14px; font-weight:300;
+      line-height:1.85; color:var(--muted);
+      margin-bottom:28px;
+      animation:panelIn 1.2s .25s cubic-bezier(.22,1,.36,1) both;
     }
-    p strong { color: var(--text); font-weight: 600; }
+    p strong { color:rgba(0,245,255,.8); font-weight:400; }
 
-    /* ── Load bar ── */
-    .load-wrap {
-      margin-bottom: 36px;
-      animation: cardIn .8s .4s cubic-bezier(.22,1,.36,1) both;
+    /* ── Data readout ── */
+    .readout {
+      display:grid; grid-template-columns:1fr 1fr;
+      gap:8px; margin-bottom:28px;
+      animation:panelIn 1.2s .3s cubic-bezier(.22,1,.36,1) both;
     }
-    .load-label {
-      display: flex;
-      justify-content: space-between;
-      font-family: var(--mono);
-      font-size: 11px;
-      color: var(--muted);
-      margin-bottom: 8px;
+    .rdx {
+      background:rgba(0,245,255,.04);
+      border:1px solid rgba(0,245,255,.12);
+      border-radius:6px; padding:10px 14px; text-align:left;
     }
-    .load-bar {
-      height: 6px;
-      background: var(--border);
-      border-radius: 999px;
-      overflow: hidden;
-    }
-    .load-fill {
-      height: 100%;
-      border-radius: 999px;
-      background: linear-gradient(90deg, var(--accent), var(--accent2));
-      animation: fillBar 2.5s ease-in-out infinite alternate;
-    }
-    @keyframes fillBar {
-      from { width: 72%; }
-      to   { width: 98%; }
-    }
+    .rdx-k { font-size:9px; letter-spacing:.15em; color:rgba(0,245,255,.4); text-transform:uppercase; margin-bottom:4px; }
+    .rdx-v { font-size:13px; color:var(--c1); }
+    .rdx-v.warn { color:var(--c4); text-shadow:0 0 10px rgba(255,106,240,.4); }
+    .rdx-v.ok   { color:var(--c3); text-shadow:0 0 10px rgba(0,255,157,.3); }
 
-    /* ── Divider ── */
-    hr {
-      border: none;
-      border-top: 1px solid var(--border);
-      margin-bottom: 28px;
-      animation: cardIn .8s .45s cubic-bezier(.22,1,.36,1) both;
+    /* ── URL chip ── */
+    .chip {
+      font-family:var(--mono); font-size:12px; color:var(--c2);
+      border:1px solid rgba(191,0,255,.25);
+      background:rgba(191,0,255,.06);
+      border-radius:6px; padding:8px 16px;
+      display:inline-block; margin-bottom:28px;
+      position:relative; overflow:hidden;
+      animation:panelIn 1.2s .32s cubic-bezier(.22,1,.36,1) both;
+      max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
     }
+    .chip::after {
+      content:''; position:absolute; top:0; left:-100%; width:60%; height:100%;
+      background:linear-gradient(90deg,transparent,rgba(191,0,255,.15),transparent);
+      animation:chipShine 2.5s linear infinite;
+    }
+    @keyframes chipShine { to{left:200%} }
 
-    /* ── Meta info ── */
-    .meta {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 36px;
-      animation: cardIn .8s .5s cubic-bezier(.22,1,.36,1) both;
-    }
-    .meta-item {
-      background: rgba(255,255,255,.025);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 14px 16px;
-    }
-    .meta-key {
-      font-family: var(--mono);
-      font-size: 10px;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 4px;
-    }
-    .meta-val {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    /* ── CTA ── */
+    /* ── Buttons ── */
     .cta {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      animation: cardIn .8s .55s cubic-bezier(.22,1,.36,1) both;
+      display:flex; gap:12px; justify-content:center; flex-wrap:wrap;
+      animation:panelIn 1.2s .38s cubic-bezier(.22,1,.36,1) both;
     }
-
     .btn {
-      flex: 1 1 auto;
-      min-width: 140px;
-      padding: 14px 24px;
-      border-radius: 10px;
-      font-family: var(--sans);
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: transform .15s, box-shadow .15s, opacity .15s;
-      border: none;
-      text-align: center;
-      text-decoration: none;
-      display: inline-block;
+      font-family:var(--orb); font-size:12px; font-weight:700;
+      letter-spacing:.12em; text-transform:uppercase;
+      padding:13px 28px; border-radius:6px; cursor:pointer;
+      border:none; text-decoration:none; display:inline-block;
+      position:relative; overflow:hidden;
+      transition:transform .2s, box-shadow .2s;
     }
-    .btn:active { transform: scale(.97); }
+    .btn:hover { transform:translateY(-3px); }
+    .btn:active { transform:scale(.97); }
+    .btn::before {
+      content:''; position:absolute; inset:0;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent);
+      background-size:200% 100%;
+      animation:btnShine 2s linear infinite;
+    }
+    @keyframes btnShine { from{background-position:200%} to{background-position:-200%} }
 
     .btn-primary {
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color: #0a0c10;
-      box-shadow: 0 4px 24px rgba(255,95,46,.35);
+      background:linear-gradient(135deg,rgba(0,245,255,.15),rgba(191,0,255,.15));
+      border:1px solid rgba(0,245,255,.5);
+      color:var(--c1);
+      box-shadow:0 0 20px rgba(0,245,255,.2), inset 0 0 20px rgba(0,245,255,.05);
     }
-    .btn-primary:hover { box-shadow: 0 6px 32px rgba(255,95,46,.55); transform: translateY(-1px); }
+    .btn-primary:hover { box-shadow:0 0 40px rgba(0,245,255,.4), inset 0 0 30px rgba(0,245,255,.08); }
 
     .btn-ghost {
-      background: transparent;
-      color: var(--muted);
-      border: 1px solid var(--border);
+      background:transparent;
+      border:1px solid rgba(191,0,255,.3);
+      color:var(--c2);
     }
-    .btn-ghost:hover { color: var(--text); border-color: var(--muted); transform: translateY(-1px); }
-
-    /* ── Countdown ── */
-    #countdown {
-      font-family: var(--mono);
-      font-size: 13px;
-      text-align: center;
-      color: var(--muted);
-      margin-top: 20px;
-      animation: cardIn .8s .6s cubic-bezier(.22,1,.36,1) both;
-    }
-    #countdown span { color: var(--accent2); font-weight: 700; }
+    .btn-ghost:hover { box-shadow:0 0 20px rgba(191,0,255,.2); border-color:rgba(191,0,255,.6); }
 
     /* ── Footer ── */
     .footer {
-      margin-top: 32px;
-      font-family: var(--mono);
-      font-size: 11px;
-      color: var(--muted);
-      text-align: center;
-      letter-spacing: .05em;
-      z-index: 10;
-      animation: cardIn .8s .7s cubic-bezier(.22,1,.36,1) both;
+      margin-top:20px; font-size:11px; color:rgba(0,245,255,.3);
+      letter-spacing:.1em; z-index:10; text-align:center;
+      animation:panelIn 1.2s .5s cubic-bezier(.22,1,.36,1) both;
     }
+    .footer a { color:rgba(0,245,255,.5); text-decoration:none; }
+    .footer a:hover { color:var(--c1); }
 
-    @media (max-width: 480px) {
-      .card { padding: 36px 28px 32px; }
-      .code-line { font-size: 64px; }
-      .meta { grid-template-columns: 1fr; }
+    /* ── Scan flicker ── */
+    @keyframes flicker {
+      0%,95%,100%{opacity:1}
+      96%{opacity:.85}
+      97%{opacity:1}
+      98%{opacity:.9}
+    }
+    .panel { animation:panelIn 1.2s cubic-bezier(.22,1,.36,1) both, flicker 8s infinite; }
+
+    /* ── Responsive ── */
+    @media(max-width:500px){
+      .glass{padding:36px 24px 32px;}
+      .code,.code-ghost{font-size:80px;}
+      .code::before,.code::after{font-size:80px;}
+      h1{font-size:15px;}
+      .readout{grid-template-columns:1fr;}
+      .holo-ring{width:130px;height:130px;}
     }
   </style>
 </head>
 <body>
-  <div class="blob blob-1"></div>
-  <div class="blob blob-2"></div>
 
-  <div class="card">
-    <div class="badge">
-      <span class="badge-dot"></span>
-      HTTP 503 · Service Unavailable
+<canvas id="cv"></canvas>
+<div class="prism-bar pb1"></div>
+<div class="prism-bar pb2"></div>
+<div class="prism-bar pb3"></div>
+<div class="amb a1"></div>
+<div class="amb a2"></div>
+<div class="amb a3"></div>
+<div class="scan"></div>
+
+<!-- HUD Corners -->
+<div class="corner c-tl">
+  <svg width="80" height="80">
+    <polyline class="hud-line" points="0,60 0,0 60,0"/>
+    <polyline class="hud-line2" points="10,40 10,10 40,10"/>
+    <circle cx="0" cy="0" r="3" fill="none" stroke="#00f5ff" stroke-width="1" opacity=".4"/>
+  </svg>
+</div>
+<div class="corner c-tr">
+  <svg width="80" height="80">
+    <polyline class="hud-line" points="0,60 0,0 60,0"/>
+    <polyline class="hud-line2" points="10,40 10,10 40,10"/>
+  </svg>
+</div>
+<div class="corner c-bl">
+  <svg width="80" height="80">
+    <polyline class="hud-line" points="0,60 0,0 60,0"/>
+    <polyline class="hud-line2" points="10,40 10,10 40,10"/>
+  </svg>
+</div>
+<div class="corner c-br">
+  <svg width="80" height="80">
+    <polyline class="hud-line" points="0,60 0,0 60,0"/>
+    <polyline class="hud-line2" points="10,40 10,10 40,10"/>
+  </svg>
+</div>
+
+<div class="panel">
+  <div class="glass">
+    <div class="corner-acc tl"></div>
+    <div class="corner-acc tr"></div>
+    <div class="corner-acc bl"></div>
+    <div class="corner-acc br"></div>
+
+    <div class="badge"><span class="badge-dot"></span>SYS::HOLOGRAM_OS v4.0.4</div>
+
+    <!-- Holographic ring -->
+    <div class="holo-ring">
+      <svg viewBox="0 0 170 170" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="rg1" cx="50%" cy="50%">
+            <stop offset="0%" stop-color="#00f5ff" stop-opacity=".15"/>
+            <stop offset="100%" stop-color="#00f5ff" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <!-- Center glow -->
+        <circle cx="85" cy="85" r="60" fill="url(#rg1)"/>
+        <!-- Outer ring -->
+        <g class="ring-outer">
+          <circle cx="85" cy="85" r="78" fill="none" stroke="rgba(0,245,255,.15)" stroke-width=".8"/>
+          <circle cx="85" cy="85" r="78" fill="none" stroke="rgba(0,245,255,.5)" stroke-width="1.5"
+            stroke-dasharray="30 20 10 60 5 45" stroke-linecap="round"/>
+          <!-- Outer dots -->
+          <circle cx="85" cy="7" r="3" fill="#00f5ff" opacity=".8"/>
+          <circle cx="163" cy="85" r="2" fill="#bf00ff" opacity=".6"/>
+        </g>
+        <!-- Middle ring -->
+        <g class="ring-inner">
+          <circle cx="85" cy="85" r="58" fill="none" stroke="rgba(191,0,255,.3)" stroke-width=".8"/>
+          <circle cx="85" cy="85" r="58" fill="none" stroke="rgba(191,0,255,.6)" stroke-width="1"
+            stroke-dasharray="15 25 40 10" stroke-linecap="round"/>
+        </g>
+        <!-- Inner ring -->
+        <circle cx="85" cy="85" r="40" fill="none" stroke="rgba(0,255,157,.2)" stroke-width=".6"
+          stroke-dasharray="5 10"/>
+        <!-- Question mark hologram -->
+        <text x="85" y="100" text-anchor="middle" font-family="Orbitron,sans-serif"
+          font-size="36" font-weight="900" fill="none"
+          stroke="rgba(0,245,255,.7)" stroke-width="1.5">?</text>
+        <text x="85" y="100" text-anchor="middle" font-family="Orbitron,sans-serif"
+          font-size="36" font-weight="900" fill="none"
+          stroke="rgba(191,0,255,.4)" stroke-width="1" transform="translate(-2,1)">?</text>
+        <!-- Orbit dot -->
+        <g class="ring-dot">
+          <circle cx="85" cy="7" r="4" fill="#00f5ff" opacity=".9"/>
+          <circle cx="85" cy="7" r="8" fill="none" stroke="#00f5ff" stroke-width=".5" opacity=".3"/>
+        </g>
+      </svg>
     </div>
 
-    <div class="code-line">503</div>
+    <!-- 404 -->
+    <div class="code-wrap">
+      <div class="code-ghost g2">404</div>
+      <div class="code-ghost g1">404</div>
+      <div class="code">404</div>
+    </div>
 
-    <h1>Hệ thống đang quá tải</h1>
+    <h1>Không tìm thấy trang</h1>
 
     <p>
-      Máy chủ hiện đang xử lý <strong>lưu lượng cao bất thường</strong>
-      và tạm thời không thể phản hồi yêu cầu của bạn.
-      Chúng tôi đang cân bằng tải và sẽ sớm khôi phục dịch vụ.
+      Tín hiệu hologram bị <strong>mất kết nối</strong>.<br/>
+      Trang yêu cầu không tồn tại trong <strong>không gian dữ liệu</strong> này.
     </p>
 
-    <div class="load-wrap">
-      <div class="load-label">
-        <span>Tải máy chủ</span>
-        <span id="loadPct">97%</span>
-      </div>
-      <div class="load-bar">
-        <div class="load-fill"></div>
-      </div>
+    <!-- Data readout -->
+    <div class="readout">
+      <div class="rdx"><div class="rdx-k">Mã lỗi</div><div class="rdx-v">ERR_404</div></div>
+      <div class="rdx"><div class="rdx-k">Trạng thái</div><div class="rdx-v warn">NOT_FOUND</div></div>
+      <div class="rdx"><div class="rdx-k">Thời gian</div><div class="rdx-v" id="ts">--:--:--</div></div>
+      <div class="rdx"><div class="rdx-k">Hệ thống</div><div class="rdx-v ok">ONLINE</div></div>
     </div>
 
-    <hr/>
-
-    <div class="meta">
-      <div class="meta-item">
-        <div class="meta-key">Mã lỗi</div>
-        <div class="meta-val">503 Overload</div>
-      </div>
-      <div class="meta-item">
-        <div class="meta-key">Thời gian phát hiện</div>
-        <div class="meta-val" id="errTime">--:--:--</div>
-      </div>
-      <div class="meta-item">
-        <div class="meta-key">Trạng thái</div>
-        <div class="meta-val" style="color:var(--accent)">Đang xử lý ⚡</div>
-      </div>
-      <div class="meta-item">
-        <div class="meta-key">Mức độ</div>
-        <div class="meta-val">Cao</div>
-      </div>
-    </div>
+    <div class="chip" id="urlChip">/null::undefined</div>
 
     <div class="cta">
-      <button class="btn btn-primary" onclick="location.reload()">↺ &nbsp;Thử lại ngay</button>
-      <button class="btn btn-ghost" onclick="history.back()">← &nbsp;Quay lại</button>
+      <a href="/" class="btn btn-primary">[ VỀ TRANG CHỦ ]</a>
+      <button class="btn btn-ghost" onclick="history.back()">[ QUAY LẠI ]</button>
     </div>
-
-    <div id="countdown">Tự động thử lại sau <span id="secs">30</span> giây…</div>
   </div>
+</div>
 
-  <div class="footer">© 2026 &nbsp;·&nbsp; Bộ phận kỹ thuật đang khắc phục sự cố</div>
+<div class="footer">
+  HOLOGRAM_OS &nbsp;·&nbsp; <a href="mailto:support@example.com">SYS::SUPPORT</a> &nbsp;·&nbsp; <span id="coords"></span>
+</div>
 
-  <script>
-    // Live clock
-    const timeEl = document.getElementById('errTime');
-    const update = () => {
-      const now = new Date();
-      timeEl.textContent = now.toLocaleTimeString('vi-VN');
-    };
-    update();
-    setInterval(update, 1000);
+<script>
+  // URL + time
+  document.getElementById('urlChip').textContent = window.location.pathname || '/null::undefined';
+  const ts = document.getElementById('ts');
+  const coord = document.getElementById('coords');
+  setInterval(()=>{
+    const n=new Date();
+    ts.textContent=n.toLocaleTimeString('vi-VN');
+    coord.textContent=`LAT:${(10.78+Math.random()*.001).toFixed(4)} LNG:${(106.69+Math.random()*.001).toFixed(4)}`;
+  },1000);
 
-    // Countdown & auto-reload
-    let secs = 30;
-    const secsEl = document.getElementById('secs');
-    const timer = setInterval(() => {
-      secs--;
-      secsEl.textContent = secs;
-      if (secs <= 0) { clearInterval(timer); location.reload(); }
-    }, 1000);
+  // Canvas: prismatic particle field
+  const cv=document.getElementById('cv');
+  const ctx=cv.getContext('2d');
+  let W,H;
+  function resize(){ W=cv.width=innerWidth; H=cv.height=innerHeight; }
+  resize(); addEventListener('resize',resize);
 
-    // Fluctuate load pct display
-    const pctEl = document.getElementById('loadPct');
-    setInterval(() => {
-      pctEl.textContent = (Math.floor(Math.random() * 8) + 91) + '%';
-    }, 1800);
-  </script>
+  let mx=W/2,my=H/2;
+  addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+
+  const COLS=['#00f5ff','#bf00ff','#00ff9d','#ff6af0','#fff8a0'];
+
+  class P {
+    constructor(init){
+      this.x=Math.random()*W;
+      this.y=init?Math.random()*H:H+5;
+      this.r=Math.random()*1.2+.2;
+      this.col=COLS[Math.floor(Math.random()*COLS.length)];
+      this.a=Math.random()*.5+.1;
+      this.vx=(Math.random()-.5)*.4;
+      this.vy=-(Math.random()*.6+.1);
+      this.life=1; this.dec=Math.random()*.002+.001;
+      this.tw=Math.random()*Math.PI*2;
+      this.ts=Math.random()*.06+.01;
+    }
+    tick(){
+      const dx=mx-this.x,dy=my-this.y,d=Math.hypot(dx,dy);
+      if(d<200){this.vx-=dx/d*.05;this.vy-=dy/d*.05;}
+      this.vx*=.99;this.vy*=.99;
+      this.x+=this.vx;this.y+=this.vy;
+      this.tw+=this.ts;this.life-=this.dec;
+      if(this.life<=0||this.y<-10){this.x=Math.random()*W;this.y=H+5;this.life=1;}
+    }
+    draw(){
+      const a=this.a*this.life*(0.5+0.5*Math.sin(this.tw));
+      ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+      ctx.fillStyle=this.col;ctx.globalAlpha=a;ctx.fill();
+    }
+  }
+
+  // Prism streaks
+  class Streak {
+    constructor(){
+      this.x=Math.random()*W; this.y=Math.random()*H*.5;
+      this.len=Math.random()*120+60;
+      this.speed=Math.random()*10+8;
+      this.ang=Math.PI/5+(Math.random()-.5)*.3;
+      this.col=COLS[Math.floor(Math.random()*COLS.length)];
+      this.a=0; this.done=false;
+    }
+    tick(){
+      this.x+=Math.cos(this.ang)*this.speed;
+      this.y+=Math.sin(this.ang)*this.speed;
+      this.a=Math.max(0,this.a+(this.a<.8&&!this.done?.05:-.03));
+      if(this.a<=0&&this.done)return true;
+      if(this.a>=.8)this.done=true;
+      if(this.x>W+200||this.y>H+200)return true;
+      return false;
+    }
+    draw(){
+      const ex=this.x-Math.cos(this.ang)*this.len;
+      const ey=this.y-Math.sin(this.ang)*this.len;
+      const g=ctx.createLinearGradient(ex,ey,this.x,this.y);
+      g.addColorStop(0,'rgba(0,0,0,0)');
+      g.addColorStop(1,this.col);
+      ctx.beginPath();ctx.moveTo(ex,ey);ctx.lineTo(this.x,this.y);
+      ctx.strokeStyle=g;ctx.lineWidth=1.2;ctx.globalAlpha=this.a*.6;ctx.stroke();
+    }
+  }
+
+  const pts=[]; for(let i=0;i<200;i++)pts.push(new P(true));
+  let streaks=[];
+  setInterval(()=>{ if(Math.random()<.5)streaks.push(new Streak()); },1800);
+
+  function loop(){
+    ctx.clearRect(0,0,W,H);
+    ctx.globalAlpha=1;
+    pts.forEach(p=>{p.tick();p.draw();});
+    streaks=streaks.filter(s=>{ const d=s.tick(); if(!d)s.draw(); return!d; });
+    requestAnimationFrame(loop);
+  }
+  loop();
+</script>
 </body>
 </html>
