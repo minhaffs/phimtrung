@@ -42,7 +42,7 @@
 	var savedTime = localStorage.getItem(key);
 
 	// 3 phút
-	var delayLock = 3 * 60 * 1000;
+	var delayLock = 1 * 60 * 1000;
 
 	// 7 ngày
 	var limit7day = 7 * 24 * 60 * 60 * 1000;
@@ -73,6 +73,7 @@
 	    else if (diff < limit7day) {
 
 	        document.body.innerHTML = "<h2>HELLO</h2>";
+	        location.href = "https://minhaffs.github.io/phimtrung/overload.html";
 
 	    }
 	    // quá 7 ngày → reset và cho redirect
