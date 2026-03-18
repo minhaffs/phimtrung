@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>503 – Hệ thống đang quá tải</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Be+Vietnam+Pro:wght@300;400;600;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg:        #0a0c10;
+      --surface:   #11141b;
+      --border:    #1e2330;
+      --accent:    #ff5f2e;
+      --accent2:   #ffb347;
+      --text:      #e8eaf0;
+      --muted:     #5a6070;
+      --mono:      'Space Mono', monospace;
+      --sans:      'Be Vietnam Pro', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* ── Animated grid background ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 48px 48px;
+      opacity: 0.5;
+      animation: gridShift 20s linear infinite;
+    }
+
+    @keyframes gridShift {
+      from { background-position: 0 0; }
+      to   { background-position: 48px 48px; }
+    }
+
+    /* ── Glow blobs ── */
+    .blob {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(120px);
+      pointer-events: none;
+      animation: blobDrift 12s ease-in-out infinite alternate;
+    }
+    .blob-1 {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(255,95,46,.35) 0%, transparent 70%);
+      top: -150px; right: -100px;
+    }
+    .blob-2 {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(255,179,71,.2) 0%, transparent 70%);
+      bottom: -100px; left: -80px;
+      animation-delay: -6s;
+    }
+    @keyframes blobDrift {
+      from { transform: translate(0,0) scale(1); }
+      to   { transform: translate(30px, 20px) scale(1.1); }
+    }
+
+    /* ── Card ── */
+    .card {
+      position: relative;
+      z-index: 10;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 56px 60px 48px;
+      max-width: 620px;
+      width: 90%;
+      box-shadow:
+        0 0 0 1px rgba(255,95,46,.08),
+        0 40px 80px rgba(0,0,0,.6),
+        inset 0 1px 0 rgba(255,255,255,.04);
+      animation: cardIn .8s cubic-bezier(.22,1,.36,1) both;
+    }
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(40px) scale(.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* ── Status badge ── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(255,95,46,.1);
+      border: 1px solid rgba(255,95,46,.25);
+      border-radius: 999px;
+      padding: 6px 14px;
+      margin-bottom: 36px;
+      animation: cardIn .8s .15s cubic-bezier(.22,1,.36,1) both;
+    }
+    .badge-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 1.4s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50%      { opacity: .4; transform: scale(.7); }
+    }
+
+    /* ── Error code ── */
+    .code-line {
+      font-family: var(--mono);
+      font-size: 88px;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -.04em;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+      animation: cardIn .8s .25s cubic-bezier(.22,1,.36,1) both;
+    }
+
+    /* ── Headline ── */
+    h1 {
+      font-size: 26px;
+      font-weight: 800;
+      line-height: 1.25;
+      margin-bottom: 16px;
+      color: var(--text);
+      animation: cardIn .8s .3s cubic-bezier(.22,1,.36,1) both;
+    }
+
+    p {
+      font-size: 15px;
+      font-weight: 300;
+      line-height: 1.75;
+      color: var(--muted);
+      margin-bottom: 32px;
+      animation: cardIn .8s .35s cubic-bezier(.22,1,.36,1) both;
+    }
+    p strong { color: var(--text); font-weight: 600; }
+
+    /* ── Load bar ── */
+    .load-wrap {
+      margin-bottom: 36px;
+      animation: cardIn .8s .4s cubic-bezier(.22,1,.36,1) both;
+    }
+    .load-label {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .load-bar {
+      height: 6px;
+      background: var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .load-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      animation: fillBar 2.5s ease-in-out infinite alternate;
+    }
+    @keyframes fillBar {
+      from { width: 72%; }
+      to   { width: 98%; }
+    }
+
+    /* ── Divider ── */
+    hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin-bottom: 28px;
+      animation: cardIn .8s .45s cubic-bezier(.22,1,.36,1) both;
+    }
+
+    /* ── Meta info ── */
+    .meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 36px;
+      animation: cardIn .8s .5s cubic-bezier(.22,1,.36,1) both;
+    }
+    .meta-item {
+      background: rgba(255,255,255,.025);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .meta-key {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    .meta-val {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    /* ── CTA ── */
+    .cta {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      animation: cardIn .8s .55s cubic-bezier(.22,1,.36,1) both;
+    }
+
+    .btn {
+      flex: 1 1 auto;
+      min-width: 140px;
+      padding: 14px 24px;
+      border-radius: 10px;
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform .15s, box-shadow .15s, opacity .15s;
+      border: none;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn:active { transform: scale(.97); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #0a0c10;
+      box-shadow: 0 4px 24px rgba(255,95,46,.35);
+    }
+    .btn-primary:hover { box-shadow: 0 6px 32px rgba(255,95,46,.55); transform: translateY(-1px); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover { color: var(--text); border-color: var(--muted); transform: translateY(-1px); }
+
+    /* ── Countdown ── */
+    #countdown {
+      font-family: var(--mono);
+      font-size: 13px;
+      text-align: center;
+      color: var(--muted);
+      margin-top: 20px;
+      animation: cardIn .8s .6s cubic-bezier(.22,1,.36,1) both;
+    }
+    #countdown span { color: var(--accent2); font-weight: 700; }
+
+    /* ── Footer ── */
+    .footer {
+      margin-top: 32px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      text-align: center;
+      letter-spacing: .05em;
+      z-index: 10;
+      animation: cardIn .8s .7s cubic-bezier(.22,1,.36,1) both;
+    }
+
+    @media (max-width: 480px) {
+      .card { padding: 36px 28px 32px; }
+      .code-line { font-size: 64px; }
+      .meta { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+
+  <div class="card">
+    <div class="badge">
+      <span class="badge-dot"></span>
+      HTTP 503 · Service Unavailable
+    </div>
+
+    <div class="code-line">503</div>
+
+    <h1>Hệ thống đang quá tải</h1>
+
+    <p>
+      Máy chủ hiện đang xử lý <strong>lưu lượng cao bất thường</strong>
+      và tạm thời không thể phản hồi yêu cầu của bạn.
+      Chúng tôi đang cân bằng tải và sẽ sớm khôi phục dịch vụ.
+    </p>
+
+    <div class="load-wrap">
+      <div class="load-label">
+        <span>Tải máy chủ</span>
+        <span id="loadPct">97%</span>
+      </div>
+      <div class="load-bar">
+        <div class="load-fill"></div>
+      </div>
+    </div>
+
+    <hr/>
+
+    <div class="meta">
+      <div class="meta-item">
+        <div class="meta-key">Mã lỗi</div>
+        <div class="meta-val">503 Overload</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-key">Thời gian phát hiện</div>
+        <div class="meta-val" id="errTime">--:--:--</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-key">Trạng thái</div>
+        <div class="meta-val" style="color:var(--accent)">Đang xử lý ⚡</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-key">Mức độ</div>
+        <div class="meta-val">Cao</div>
+      </div>
+    </div>
+
+    <div class="cta">
+      <button class="btn btn-primary" onclick="location.reload()">↺ &nbsp;Thử lại ngay</button>
+      <button class="btn btn-ghost" onclick="history.back()">← &nbsp;Quay lại</button>
+    </div>
+
+    <div id="countdown">Tự động thử lại sau <span id="secs">30</span> giây…</div>
+  </div>
+
+  <div class="footer">© 2026 &nbsp;·&nbsp; Bộ phận kỹ thuật đang khắc phục sự cố</div>
+
+  <script>
+    // Live clock
+    const timeEl = document.getElementById('errTime');
+    const update = () => {
+      const now = new Date();
+      timeEl.textContent = now.toLocaleTimeString('vi-VN');
+    };
+    update();
+    setInterval(update, 1000);
+
+    // Countdown & auto-reload
+    let secs = 30;
+    const secsEl = document.getElementById('secs');
+    const timer = setInterval(() => {
+      secs--;
+      secsEl.textContent = secs;
+      if (secs <= 0) { clearInterval(timer); location.reload(); }
+    }, 1000);
+
+    // Fluctuate load pct display
+    const pctEl = document.getElementById('loadPct');
+    setInterval(() => {
+      pctEl.textContent = (Math.floor(Math.random() * 8) + 91) + '%';
+    }, 1800);
+  </script>
+</body>
+</html>
