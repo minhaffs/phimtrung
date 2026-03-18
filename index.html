@@ -1,80 +1,59 @@
-
 <!DOCTYPE html>
 <html>
 <head>
-	<meta name="referrer" content="no-referrer">
-	
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>redirect</title>
+</head>
+
+<body>
 
 <script>
+window.addEventListener("load", function(){
 
-		var key = "visited_time";
-		var savedTime = localStorage.getItem(key);
+    var key = "visited_time";
+    var savedTime = localStorage.getItem(key);
 
-		var now = Date.now();
-		var limit = 7 * 24 * 60 * 60 * 1000; // 7 ngày
+    var now = Date.now();
+    var limit = 7 * 24 * 60 * 60 * 1000;
 
-		if (savedTime) {
+    function goLink(){
 
-		    var diff = now - savedTime;
+        var hour = new Date().getHours();
 
-		    if (diff >= limit) {
+        if (hour >= 20 || hour < 5) {
+            location.href = "https://minhacao.vn";
+        } else {
+            location.href = "https://link-ngay.com";
+        }
 
-		        // đã quá 7 ngày → cho mở link
-		        localStorage.setItem(key, now);
+    }
 
-		        var hour = new Date().getHours();
+    if (savedTime) {
 
-		        if (hour >= 20 || hour < 5) {
-		            window.location.replace("https://shorturl.at/FfP3u");
-		        } else {
-		            location.replace("https://link-ngay.com");
-		        }
+        var diff = now - savedTime;
 
-		    } else {
+        if (diff >= limit) {
 
-		        console.log('chua du 7 ngay');
+            localStorage.setItem(key, now);
 
-		    }
+            setTimeout(goLink, 800); // delay chống mobile chặn
 
-		} else {
+        } else {
 
-		    // chưa từng truy cập
-		    localStorage.setItem(key, now);
-		    console.log('da truy cap doi 7 ngay');
+            document.body.innerHTML = "<h2>Chưa đủ 7 ngày 😄</h2>";
 
-		}
+        }
 
+    } else {
 
-	</script>
+        localStorage.setItem(key, now);
+        document.body.innerHTML = "<h2>Đã ghi nhận truy cập 👍<br>Quay lại sau 7 ngày</h2>";
 
-	
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title></title>
-	</script>
-<!-- HTML Meta Tags -->
-<title>Website cung cấp xem phim online miễn phí trực tuyến - Phim HD Vietsub</title>
-<meta name="description" content="Câu chuyện vẫn chưa kết thúc… Nhấn vào link để xem Phần 2 ngay bây giờ! " />
+    }
 
-<!-- Google / Search Engine Tags -->
-<meta itemprop="name" content="Câu chuyện vẫn chưa kết thúc… Nhấn vào link để xem Phần 2 ngay bây giờ!" />
-<meta itemprop="description" content="Câu chuyện vẫn chưa kết thúc… Nhấn vào link để xem Phần 2 ngay bây giờ!" />
-<meta itemprop="image" content="https://raw.githubusercontent.com/minhaffs/phimtrung/refs/heads/main/rophi.jpg" />
-
-<!-- Facebook Meta Tags -->
-<meta property="og:url" content="Câu chuyện vẫn chưa kết thúc… Nhấn vào link để xem Phần 2 ngay bây giờ!" />
-<meta property="og:type" content="Câu chuyện vẫn chưa kết thúc… Nhấn vào link để xem Phần 2 ngay bây giờ!" />
-<meta property="og:title" content="Câu chuyện vẫn chưa kết thúc… Nhấn vào link để xem Phần 2 ngay bây giờ!" />
-<meta property="og:description" content="Câu chuyện vẫn chưa kết thúc… Nhấn vào link để xem Phần 2 ngay bây giờ!" />
-<meta property="og:image" content="https://raw.githubusercontent.com/minhaffs/phimtrung/refs/heads/main/rophi.jpg" />
-
-<!-- Twitter Meta Tags -->
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Câu chuyện vẫn chưa kết thúc… Nhấn vào link để xem Phần 2 ngay bây giờ!" />
-<meta name="twitter:description" content="Câu chuyện vẫn chưa kết thúc… Nhấn vào link để xem Phần 2 ngay bây giờ!" />
-<meta name="twitter:image" content="https://raw.githubusercontent.com/minhaffs/phimtrung/refs/heads/main/rophi.jpg" />
-</head>
-<body>
+});
+</script>
 
 </body>
 </html>
